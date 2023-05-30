@@ -1,0 +1,6 @@
+{
+    "commonErrors": {
+      "somethingWentWrong": "Что-то пошло не так...",
+      "noConnection": "Нет связи с сервером"
+    }
+}
