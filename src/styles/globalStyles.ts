@@ -1,5 +1,4 @@
-import { createGlobalStyle } from 'styled-components'
-import colors from './colors'
+import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   html, body {
@@ -14,6 +13,6 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
-;`
+;`;
 
 export default GlobalStyle;
