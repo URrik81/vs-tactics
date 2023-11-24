@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { primaryComponent, primaryBorder } from "@src/styles/elementColors";
 //import { staticAsset } from "@src/styles/utils";
@@ -41,18 +41,25 @@ const CardContainer = styled.div<{ order: OrderType }>`
 //  background-image: url(${({ order }) => staticAsset(order.imagePath)});
 
 interface CardProps {
-  order: number;
+  providedOrder?: number;
   onOrderChanged: (order: number) => void;
 }
 
-const Card = ({ order: number, onOrderChanged }: CardProps) => {
-  const [order, setOrder] = useState<OrderType>(orderArray[0]);
+const Card: React.FC<CardProps> = ({ providedOrder = 0, onOrderChanged }) => {
+  const [order, setOrder] = useState<OrderType>(orderArray[providedOrder || 0]);
 
-  function onChangeOrder() {
+  useEffect(() => {
+    if (!providedOrder) return;
+
+    console.log("providedOrder : " + providedOrder);
+    setOrder(orderArray[providedOrder]);
+  }, [providedOrder]);
+
+  const onChangeOrder = useCallback(() => {
     let newOrder = order.order + 1 > 3 ? 1 : order.order + 1;
     setOrder(orderArray[newOrder]);
     onOrderChanged(orderArray[newOrder].order);
-  }
+  }, [onOrderChanged, order.order]);
 
   return (
     <CardContainer

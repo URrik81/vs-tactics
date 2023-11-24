@@ -1,7 +1,7 @@
 import { px2rem } from "@src/styles";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import styled from "styled-components";
-import { Button, Text } from "./common";
+import { Button, Card, Text } from "./common";
 import { primaryEmbedded } from "@src/styles/elementColors";
 
 const TestContainer = styled.div`
@@ -21,7 +21,7 @@ const TestPage: React.FC = () => {
   const buttonTest = useMemo(() => {
     return (
       <InnerTestContainer>
-        <Text size={20}>Login Page</Text>
+        <Button>Login</Button>
         <Button>
           <Text size={20} colorType={primaryEmbedded}>
             Login Page
@@ -48,9 +48,25 @@ const TestPage: React.FC = () => {
     );
   }, []);
 
+  const onOrderChanged = useCallback((order: number) => {
+    console.log("order: " + order);
+  }, []);
+
+  const cardTest = useMemo(() => {
+    return (
+      <InnerTestContainer>
+        <Card onOrderChanged={onOrderChanged} />
+        <Card providedOrder={1} onOrderChanged={onOrderChanged} />
+        <Card providedOrder={2} onOrderChanged={onOrderChanged} />
+        <Card providedOrder={3} onOrderChanged={onOrderChanged} />
+      </InnerTestContainer>
+    );
+  }, [onOrderChanged]);
+
   return (
     <TestContainer>
       {buttonTest}
+      {cardTest}
       {textTest}
     </TestContainer>
   );
