@@ -1,16 +1,15 @@
 import React, { useMemo } from "react";
 import { ThemeProvider } from "styled-components";
-import { Provider } from "react-redux";
+//import { Provider } from "react-redux";
 import { NextPage } from "next";
 import Head from "next/head";
 import { NextIntlProvider } from "next-intl";
 
-//import { Layout } from '@src/components/common';
+import { Layout } from "@src/components/common";
 import { GlobalStyle, theme } from "@src/styles";
 //import { store } from '@src/services/store';
 import ruLocalization from "@src/translations/ru.json";
 //import { ToastProvider } from '@src/components/common/Toast';
-import Card from "@src/components/Card";
 
 import type { AppProps } from "next/app";
 
@@ -23,22 +22,22 @@ type AppPropsWithLayout = AppProps & {
 };
 
 //TEST
-function onOrderChanged(order: number) {
+/*function onOrderChanged(order: number) {
   console.log("New order : " + order);
 }
+<Card order={0} onOrderChanged={onOrderChanged} />*/
 
 const App = ({ Component, pageProps }: AppPropsWithLayout) => {
   const component = useMemo(() => {
-    //const { hideLayout } = Component;
+    const { hideLayout } = Component;
 
-    return <Component {...pageProps} />;
-    /*return hideLayout ? (
+    return hideLayout ? (
       <Component {...pageProps} />
     ) : (
       <Layout>
         <Component {...pageProps} />
       </Layout>
-    );*/
+    );
   }, [Component, pageProps]);
 
   return (
@@ -49,13 +48,11 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
-        <title key="title">Angel</title>
+        <title key="title">VS tactics</title>
       </Head>
       <GlobalStyle />
       <NextIntlProvider locale="ru" messages={ruLocalization}>
-        <ThemeProvider theme={theme}>
-          <Card order={0} onOrderChanged={onOrderChanged} />
-        </ThemeProvider>
+        <ThemeProvider theme={theme}>{component}</ThemeProvider>
       </NextIntlProvider>
     </>
   );

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import elementColors from "@src/styles/elementColors";
-import { staticAsset } from "@src/styles/utils";
+import { primaryComponent, primaryBorder } from "@src/styles/elementColors";
+//import { staticAsset } from "@src/styles/utils";
 
 interface OrderType {
   order: number;
@@ -30,9 +30,9 @@ const orderArray: OrderType[] = [
 const CardContainer = styled.div<{ order: OrderType }>`
   height: 200px;
   width: 150px;
-  border: 2px solid ${elementColors.itemBorderColor};
+  border: 2px solid ${primaryBorder.default};
   border-radius: 0.5em;
-  background: ${elementColors.itemBackground};
+  background: ${primaryComponent.default};
   background-image: url(${({ order }) => order.imagePath});
   background-repeat: no-repeat;
   background-size: auto auto;
