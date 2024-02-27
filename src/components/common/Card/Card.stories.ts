@@ -1,29 +1,34 @@
-import Card from './index';
+import { ArmyOrder } from "@src/services/models/api/army.api";
+import Card from "./index";
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Card> = {
-    title: 'Reusable components/Card',
-    component: Card,
-    tags: ['autodocs'],
-    parameters: {
-        docs: {
-            description: {
-                component: `Card of order on the battlefield`,
-            },
-        },
+  title: "Reusable components/Card",
+  component: Card,
+  tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: `Card of order on the battlefield`,
+      },
     },
-    argTypes: {
-        order: {
-            description: 'Initial state of order',
-        },
-        onOrderChanged: {
-            description: 'Callback to get order',
-        },
+  },
+  argTypes: {
+    providedOrder: {
+      description: "Initial state of order",
     },
-    args: {
-        order: 0,
+    isRunaway: {
+      description: "Shows whether this order runaway already",
     },
+    onOrderChanged: {
+      description: "Callback to get order",
+    },
+  },
+  args: {
+    providedOrder: ArmyOrder.None,
+    isRunaway: false,
+  },
 };
 
 export default meta;

@@ -1,69 +1,116 @@
 import React, { useCallback, useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { primaryComponent, primaryBorder } from "@src/styles/elementColors";
-//import { staticAsset } from "@src/styles/utils";
+import { ArmyOrder } from "@src/services/models/api/army.api";
 
 interface OrderType {
-  order: number;
+  order: ArmyOrder;
   imagePath: string;
 }
 
 const orderArray: OrderType[] = [
   {
-    order: 0,
+    order: ArmyOrder.Unknown,
     imagePath: "static/img/unknown.png",
   },
   {
-    order: 1,
+    order: ArmyOrder.Empty,
+    imagePath: "",
+  },
+  {
+    order: ArmyOrder.None,
+    imagePath: "static/img/none.png",
+  },
+  {
+    order: ArmyOrder.Arrows,
     imagePath: "static/img/arrows.png",
   },
   {
-    order: 2,
+    order: ArmyOrder.Swords,
     imagePath: "static/img/swords.png",
   },
   {
-    order: 3,
+    order: ArmyOrder.Shield,
     imagePath: "static/img/shield.png",
   },
 ];
 
-const CardContainer = styled.div<{ order: OrderType }>`
+const CardContainer = styled.div<{
+  order: OrderType;
+  isEmpty: boolean;
+  isRunaway: boolean;
+}>`
   height: 200px;
   width: 150px;
-  border: 2px solid ${primaryBorder.default};
   border-radius: 0.5em;
-  background: ${primaryComponent.default};
-  background-image: url(${({ order }) => order.imagePath});
+
+  ${({ order, isEmpty, isRunaway }) =>
+    isEmpty
+      ? css`
+          background: ${primaryComponent.disabled};
+          border: none;
+        `
+      : isRunaway
+      ? css`
+          border: 2px solid ${primaryBorder.default};
+          background: ${primaryComponent.default};
+          background-image: url("static/img/runaway.png"),
+            url(${order.imagePath});
+        `
+      : css`
+          border: 2px solid ${primaryBorder.default};
+          background: ${primaryComponent.default};
+          background-image: url(${order.imagePath});
+        `};
   background-repeat: no-repeat;
   background-size: auto auto;
 `;
 
-//  background-image: url(${({ order }) => staticAsset(order.imagePath)});
-
 interface CardProps {
-  providedOrder?: number;
-  onOrderChanged: (order: number) => void;
+  providedOrder?: ArmyOrder;
+  isRunaway?: boolean;
+  onOrderChanged?: (order: ArmyOrder) => void;
 }
 
-const Card: React.FC<CardProps> = ({ providedOrder = 0, onOrderChanged }) => {
-  const [order, setOrder] = useState<OrderType>(orderArray[providedOrder || 0]);
+const Card: React.FC<CardProps> = ({
+  providedOrder = ArmyOrder.None,
+  isRunaway = false,
+  onOrderChanged,
+}) => {
+  const getOrder = useCallback((armyOrder: ArmyOrder): OrderType => {
+    return (
+      orderArray.find((order) => order.order === armyOrder) || orderArray[1]
+    );
+  }, []);
+
+  const [order, setOrder] = useState<OrderType>(getOrder(providedOrder));
 
   useEffect(() => {
     if (!providedOrder) return;
 
     console.log("providedOrder : " + providedOrder);
-    setOrder(orderArray[providedOrder]);
-  }, [providedOrder]);
+    setOrder(getOrder(providedOrder));
+  }, [getOrder, providedOrder]);
 
   const onChangeOrder = useCallback(() => {
-    let newOrder = order.order + 1 > 3 ? 1 : order.order + 1;
+    if (
+      order.order === ArmyOrder.Unknown ||
+      order.order === ArmyOrder.Empty ||
+      isRunaway
+    )
+      return;
+
+    let newOrder = orderArray.indexOf(order) + 1;
+    newOrder = newOrder > 5 ? 3 : newOrder;
     setOrder(orderArray[newOrder]);
-    onOrderChanged(orderArray[newOrder].order);
-  }, [onOrderChanged, order.order]);
+    onOrderChanged?.(orderArray[newOrder].order);
+  }, [isRunaway, onOrderChanged, order]);
 
   return (
     <CardContainer
       order={order}
+      isEmpty={order.order === ArmyOrder.Empty}
+      isRunaway={isRunaway}
       onClick={() => onChangeOrder()}
     ></CardContainer>
   );
