@@ -3,8 +3,19 @@ import { useCallback, useMemo } from "react";
 import styled from "styled-components";
 import { Button, Card, Text } from "./common";
 import { primaryEmbedded } from "@src/styles/elementColors";
+import {
+  ArmyOrder,
+  heavyInfantry,
+  knights,
+  saaremInfantry,
+  saaremKnight,
+  saaremMilitia,
+} from "@src/services/models/api/army.api";
+import BattleUnit from "./complex/BattleUnit";
+import { BattleOrder } from "./complex";
 
 const TestContainer = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: ${px2rem(25)};
@@ -13,6 +24,14 @@ const TestContainer = styled.div`
 const InnerTestContainer = styled.div`
   display: flex;
   flex-direction: column;
+  padding: ${px2rem(20)};
+  gap: ${px2rem(10)};
+`;
+
+const BattleUnitContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: ${px2rem(700)};
   padding: ${px2rem(20)};
   gap: ${px2rem(10)};
 `;
@@ -48,28 +67,71 @@ const TestPage: React.FC = () => {
     );
   }, []);
 
-  const onOrderChanged = useCallback((order: number) => {
+  const onOrderChanged = useCallback((order: ArmyOrder) => {
     console.log("order: " + order);
   }, []);
 
   const cardTest = useMemo(() => {
     return (
-      <InnerTestContainer>
-        <Card onOrderChanged={onOrderChanged} />
-        <Card providedOrder={1} onOrderChanged={onOrderChanged} />
-        <Card providedOrder={2} onOrderChanged={onOrderChanged} />
-        <Card providedOrder={3} onOrderChanged={onOrderChanged} />
-      </InnerTestContainer>
-    );
-  }, [onOrderChanged]);
+      <>
+        {false && (
+          <InnerTestContainer>
+            <Card onOrderChanged={onOrderChanged} />
+            <Card
+              providedOrder={ArmyOrder.Arrows}
+              onOrderChanged={onOrderChanged}
+            />
+            <Card
+              providedOrder={ArmyOrder.Swords}
+              onOrderChanged={onOrderChanged}
+            />
+            <Card
+              providedOrder={ArmyOrder.Shield}
+              onOrderChanged={onOrderChanged}
+            />
+          </InnerTestContainer>
+        )}
 
-  return (
-    <TestContainer>
-      {buttonTest}
-      {cardTest}
-      {textTest}
-    </TestContainer>
-  );
+        {true && (
+          <BattleUnitContainer>
+            <BattleUnit
+              army={heavyInfantry}
+              ordersUpdated={(orders: ArmyOrder[]) => console.log({ orders })}
+              isStraight={false}
+              startPosition={0}
+              frontWidth={3}
+              isManaged={false}
+            />
+
+            <BattleUnit
+              army={heavyInfantry}
+              startPosition={0}
+              frontWidth={2}
+              ordersUpdated={(orders: ArmyOrder[]) => console.log({ orders })}
+              isManaged={true}
+            />
+            <BattleUnit
+              army={knights}
+              startPosition={1}
+              frontWidth={2}
+              ordersUpdated={(orders: ArmyOrder[]) => console.log({ orders })}
+              isManaged={true}
+            />
+          </BattleUnitContainer>
+        )}
+
+        {false && (
+          <BattleUnitContainer>
+            <BattleOrder armies={[saaremKnight]} />
+            <BattleOrder armies={[saaremInfantry]} />
+            <BattleOrder armies={[saaremMilitia]} />
+          </BattleUnitContainer>
+        )}
+      </>
+    );
+  }, [onOrderChanged]); //saaremKnight
+
+  return <TestContainer>{cardTest}</TestContainer>;
 };
 
 export default TestPage;
